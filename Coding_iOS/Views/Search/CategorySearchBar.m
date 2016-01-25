@@ -20,8 +20,16 @@
 -(void)layoutSubviews
 {
     self.autoresizesSubviews = YES;
+    NSPredicate *finalPredicate = [NSPredicate predicateWithBlock:^BOOL(UIView *candidateView, NSDictionary *bindings) {
+        if ([candidateView isMemberOfClass:NSClassFromString(@"UISearchBarTextField")]) {
+            return true;
+        }else{
+            return false;
+        }
+    }];
+    
     //找到输入框  右移
-    UITextField *searchField=[[[[self subviews] firstObject] subviews] lastObject];
+    UITextField *searchField=[[[[[self subviews] firstObject] subviews] filteredArrayUsingPredicate:finalPredicate] lastObject];
     searchField.textAlignment=NSTextAlignmentLeft;
     [searchField setFrame:CGRectMake(53,4.8,self.frame.size.width-55,22)];
     //
@@ -71,6 +79,8 @@
 @implementation MainSearchBar
 -(void)layoutSubviews
 {
+    //fix width in ios7
+    self.width=kScreen_Width-115;
     self.autoresizesSubviews = YES;
     //找到输入框  右移
     UITextField *searchField=[[[[self subviews] firstObject] subviews] lastObject];
